@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HCL Training</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header class="topbar">
+        <nav class="menu" aria-label="Main navigation">
+            <div class="brand">Monday HCL</div>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About</a></li>
+                <li><a href="#calculator">Calculator</a></li>
+                <li><a href="#contact">Contact</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="container">
+        <section id="home" class="hero">
+            <h1>HCL Training Project</h1>
+            <p>This page demonstrates a simple menu layout and a small calculator built for learning HTML, CSS, and JavaScript.</p>
+        </section>
+
+        <section id="about" class="card">
+            <h2>About</h2>
+            <p>We are practicing frontend basics and improving the project structure with a clean, user-friendly design.</p>
+        </section>
+
+        <section id="calculator" class="card calculator">
+            <h2>Calculator</h2>
+            <div class="inputs">
+                <label>
+                    First Number
+                    <input type="number" id="firstNumber" value="10">
+                </label>
+
+                <label>
+                    Operation
+                    <select id="operation">
+                        <option value="+">+</option>
+                        <option value="-">-</option>
+                        <option value="*">*</option>
+                        <option value="/">/</option>
+                    </select>
+                </label>
+
+                <label>
+                    Second Number
+                    <input type="number" id="secondNumber" value="5">
+                </label>
+            </div>
+
+            <button id="calculateBtn">Calculate</button>
+            <p id="result" class="result">Result: 15</p>
+        </section>
+
+        <section id="contact" class="card">
+            <h2>Contact</h2>
+            <p>Email: hello@example.com</p>
+        </section>
+    </main>
+
+    <script>
+        const firstNumber = document.getElementById('firstNumber');
+        const secondNumber = document.getElementById('secondNumber');
+        const operation = document.getElementById('operation');
+        const result = document.getElementById('result');
+
+        document.getElementById('calculateBtn').addEventListener('click', function () {
+            const a = Number(firstNumber.value);
+            const b = Number(secondNumber.value);
+            let answer = 0;
+
+            switch (operation.value) {
+                case '+':
+                    answer = a + b;
+                    break;
+                case '-':
+                    answer = a - b;
+                    break;
+                case '*':
+                    answer = a * b;
+                    break;
+                case '/':
+                    answer = b === 0 ? 'Error' : a / b;
+                    break;
+                default:
+                    answer = 'Invalid operation';
+            }
+
+            result.textContent = 'Result: ' + answer;
+        });
+    </script>
+</body>
+</html>
