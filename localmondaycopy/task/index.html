@@ -206,6 +206,154 @@
       gap: 16px;
     }
 
+    .subject-section {
+      margin-top: 30px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      box-shadow: var(--shadow);
+      padding: 22px;
+    }
+
+    .subject-section h2 {
+      margin-top: 0;
+      margin-bottom: 18px;
+      color: var(--primary-dark);
+      font-size: 1.5rem;
+    }
+
+    .subject-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 18px;
+    }
+
+    .subject-card {
+      background: linear-gradient(180deg, #f8faff 0%, #eef4ff 100%);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 18px;
+    }
+
+    .subject-card h3 {
+      margin-top: 0;
+      margin-bottom: 12px;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+    }
+
+    .subject-card h4 {
+      margin: 14px 0 8px;
+      font-size: 0.9rem;
+      color: var(--text);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .subject-card ul {
+      margin: 0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    .subject-card li + li {
+      margin-top: 6px;
+    }
+
+    .portal-panel {
+      max-width: 520px;
+      margin: 48px auto;
+    }
+
+    .portal-note,
+    .subject-summary {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .portal-note {
+      margin: 0;
+      font-size: 0.9rem;
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .dashboard-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .attendance-fields {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+      margin: 12px 0;
+    }
+
+    .attendance-fields label {
+      display: grid;
+      gap: 6px;
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .attendance-fields input {
+      width: 100%;
+      min-width: 0;
+      padding: 9px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font: inherit;
+    }
+
+    .subject-card progress {
+      width: 100%;
+      height: 10px;
+      accent-color: var(--success);
+    }
+
+    .progress-label {
+      display: flex;
+      justify-content: space-between;
+      gap: 8px;
+      margin: 12px 0 6px;
+      font-size: 0.9rem;
+    }
+
+    .tracked-list {
+      list-style: none;
+      padding: 0;
+    }
+
+    .tracked-list li {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      color: var(--text);
+    }
+
+    .tracked-list input {
+      flex: 0 0 auto;
+      margin-top: 4px;
+      accent-color: var(--primary);
+    }
+
+    .tracked-list li.is-complete span {
+      color: var(--muted);
+      text-decoration: line-through;
+    }
+
+    .subject-summary {
+      margin: 8px 0 0;
+      font-size: 0.9rem;
+    }
+
     .task-card {
       background: var(--card);
       border: 1px solid var(--border);
@@ -340,6 +488,11 @@
         align-items: flex-start;
       }
 
+      .dashboard-header {
+        align-items: flex-start;
+        flex-direction: column;
+      }
+
       .button-row,
       .task-actions,
       .filters {
@@ -355,14 +508,45 @@
   </style>
 </head>
 <body>
-  <div class="container">
+  <main id="loginView" class="container">
+    <section class="panel portal-panel">
+      <h1>Student Portal</h1>
+      <p class="portal-note">Demo portal only. Enter any roll number and password to preview the dashboard. This page does not verify identities; connect a secure institution backend for real authentication.</p>
+      <form id="loginForm" style="margin-top: 20px">
+        <div class="field">
+          <label for="rollNumber">Roll number</label>
+          <input id="rollNumber" name="rollNumber" autocomplete="username" required />
+        </div>
+        <div class="field">
+          <label for="portalPassword">Password</label>
+          <input id="portalPassword" name="password" type="password" autocomplete="current-password" required />
+        </div>
+        <button type="submit" class="btn-primary">Open demo dashboard</button>
+        <p id="loginMessage" class="portal-note" role="status"></p>
+      </form>
+    </section>
+  </main>
+
+  <div id="dashboardView" class="container hidden">
+    <header class="dashboard-header">
+      <p class="portal-note">Signed in for this demo as <strong id="studentRoll"></strong></p>
+      <button type="button" class="btn-secondary" id="logoutBtn">Log out</button>
+    </header>
     <header class="app-header">
       <div class="title-wrap">
         <h1>Student Task Manager</h1>
         <p>Track your daily academic work with clarity.</p>
       </div>
 
-      <div class="stats" aria-label="Task summary">
+      <div class="stats" aria-label="Academic and task summary">
+        <div class="stat-pill">
+          <strong id="overallSyllabus">0%</strong>
+          <span>Syllabus complete</span>
+        </div>
+        <div class="stat-pill">
+          <strong id="overallAttendance">0%</strong>
+          <span>Attendance</span>
+        </div>
         <div class="stat-pill">
           <strong id="totalTasks">0</strong>
           <span>Total</span>
@@ -438,10 +622,17 @@
         <div id="taskList" class="task-list" aria-live="polite"></div>
       </section>
     </main>
+
+    <section class="subject-section">
+      <h2>B.Tech Academic Tracker</h2>
+      <p class="portal-note">Sample engineering curriculum. Update the topic and assignment checklists to match your university syllabus.</p>
+      <div id="subjectGrid" class="subject-grid"></div>
+    </section>
   </div>
 
   <script>
     const STORAGE_KEY = 'student-task-manager';
+    const PROGRESS_STORAGE_KEY = 'btech-academic-progress';
     const taskForm = document.getElementById('taskForm');
     const titleInput = document.getElementById('title');
     const descriptionInput = document.getElementById('description');
@@ -454,6 +645,205 @@
     const taskList = document.getElementById('taskList');
     const statusFilter = document.getElementById('statusFilter');
     const priorityFilter = document.getElementById('priorityFilter');
+    const subjectGrid = document.getElementById('subjectGrid');
+    const progressData = JSON.parse(localStorage.getItem(PROGRESS_STORAGE_KEY) || '{}');
+
+    document.getElementById('loginForm').addEventListener('submit', event => {
+      event.preventDefault();
+      const rollNumber = document.getElementById('rollNumber').value.trim();
+      const password = document.getElementById('portalPassword').value;
+      if (!rollNumber || !password) return;
+      document.getElementById('studentRoll').textContent = rollNumber;
+      document.getElementById('loginView').classList.add('hidden');
+      document.getElementById('dashboardView').classList.remove('hidden');
+      document.getElementById('portalPassword').value = '';
+    });
+
+    document.getElementById('logoutBtn').addEventListener('click', () => {
+      document.getElementById('dashboardView').classList.add('hidden');
+      document.getElementById('loginView').classList.remove('hidden');
+      document.getElementById('rollNumber').value = '';
+    });
+
+    const subjects = [
+      {
+        name: 'Engineering Mathematics-I',
+        syllabus: ['Limits, continuity, differentiation', 'Matrices and determinants', 'Differential equations and applications'],
+        assignments: ['Solve optimization problems using derivatives', 'Compute eigenvalues and eigenvectors']
+      },
+      {
+        name: 'Engineering Mathematics-II',
+        syllabus: ['Vector calculus and multiple integrals', 'Laplace transforms and Fourier series', 'Complex numbers and ODEs'],
+        assignments: ['Apply Laplace transforms to a real system', 'Analyze periodic waveforms using Fourier series']
+      },
+      {
+        name: 'Engineering Physics',
+        syllabus: ['Mechanics and oscillations', 'Optics and modern physics', 'Electricity, magnetism and semiconductors'],
+        assignments: ['Prepare a report on interference in thin films', 'Explain semiconductor device applications']
+      },
+      {
+        name: 'Programming for Problem Solving',
+        syllabus: ['C/C++ basics and control flow', 'Functions, arrays, strings and recursion', 'Pointers and file handling'],
+        assignments: ['Write a calculator program', 'Build a student record management system']
+      },
+      {
+        name: 'Data Structures and Algorithms',
+        syllabus: ['Arrays, stacks, and queues', 'Linked lists, trees and graphs', 'Sorting, searching and complexity'],
+        assignments: ['Implement BFS and DFS', 'Compare sorting algorithm efficiency']
+      },
+      {
+        name: 'Object-Oriented Programming',
+        syllabus: ['Classes, objects and inheritance', 'Polymorphism and encapsulation', 'Exception handling and abstraction'],
+        assignments: ['Create a library management system', 'Design a banking application with OOP concepts']
+      },
+      {
+        name: 'DBMS',
+        syllabus: ['ER modeling and relational algebra', 'SQL and normalization', 'Transactions and indexing'],
+        assignments: ['Design a college database schema', 'Write SQL queries for student results']
+      },
+      {
+        name: 'Operating Systems',
+        syllabus: ['Process and thread management', 'Scheduling and deadlocks', 'Memory and file systems'],
+        assignments: ['Compare FCFS and Round Robin scheduling', 'Simulate memory allocation models']
+      },
+      {
+        name: 'Computer Networks',
+        syllabus: ['OSI and TCP/IP models', 'Routing, IP addressing and protocols', 'Network security basics'],
+        assignments: ['Draw an OSI model diagram', 'Configure a small LAN IP plan']
+      },
+      {
+        name: 'Digital Electronics',
+        syllabus: ['Boolean algebra and logic gates', 'K-maps and combinational logic', 'Counters, registers and flip-flops'],
+        assignments: ['Simplify a logic expression using K-map', 'Design a 4-bit counter']
+      },
+      {
+        name: 'Web Development',
+        syllabus: ['HTML, CSS and JavaScript', 'Responsive web design', 'APIs and frontend frameworks'],
+        assignments: ['Build a portfolio website', 'Create a task manager web app']
+      }
+    ];
+
+    const sampleAttendance = [38, 39, 40, 37, 41, 38, 39, 40, 37, 41, 39];
+    if (progressData.sampleVersion !== 2) {
+      subjects.forEach((subject, index) => {
+        const held = 50;
+        const attended = sampleAttendance[index];
+        progressData[subject.name] = {
+          attended,
+          held,
+          completedTopics: index < 7 ? [0, 1] : [0],
+          completedAssignments: index % 2 === 0 ? [] : [0]
+        };
+      });
+      progressData.sampleVersion = 2;
+    }
+
+    subjects.forEach(subject => {
+      if (progressData[subject.name]) return;
+      progressData[subject.name] = {
+        attended: 0,
+        held: 0,
+        completedTopics: [],
+        completedAssignments: []
+      };
+    });
+    saveProgress();
+
+    function getSubjectProgress(name) {
+      if (!progressData[name]) {
+        progressData[name] = { attended: 0, held: 0, completedTopics: [], completedAssignments: [] };
+      }
+      return progressData[name];
+    }
+
+    function saveProgress() {
+      localStorage.setItem(PROGRESS_STORAGE_KEY, JSON.stringify(progressData));
+    }
+
+    function updateAcademicStats() {
+      const topicCount = subjects.reduce((total, subject) => total + subject.syllabus.length, 0);
+      const completedTopicCount = subjects.reduce((total, subject) => {
+        return total + getSubjectProgress(subject.name).completedTopics.filter(index => index < subject.syllabus.length).length;
+      }, 0);
+      const attended = subjects.reduce((total, subject) => total + getSubjectProgress(subject.name).attended, 0);
+      const held = subjects.reduce((total, subject) => total + getSubjectProgress(subject.name).held, 0);
+      document.getElementById('overallSyllabus').textContent = `${Math.round((completedTopicCount / topicCount) * 100)}%`;
+      document.getElementById('overallAttendance').textContent = `${held ? Math.round((attended / held) * 100) : 0}%`;
+    }
+
+    function renderSubjects() {
+      subjectGrid.innerHTML = subjects.map((subject, subjectIndex) => {
+        const progress = getSubjectProgress(subject.name);
+        const attendancePercent = progress.held ? Math.round((progress.attended / progress.held) * 100) : 0;
+        const completedTopics = progress.completedTopics.filter(index => index < subject.syllabus.length).length;
+        const syllabusPercent = Math.round((completedTopics / subject.syllabus.length) * 100);
+        return `
+          <article class="subject-card" data-subject-index="${subjectIndex}">
+            <h3>${escapeHtml(subject.name)}</h3>
+            <h4>Attendance</h4>
+            <div class="attendance-fields">
+              <label>Classes attended
+                <input type="number" min="0" max="${progress.held}" value="${progress.attended}" data-progress="attended" aria-label="Classes attended for ${escapeHtml(subject.name)}">
+              </label>
+              <label>Classes held
+                <input type="number" min="0" value="${progress.held}" data-progress="held" aria-label="Classes held for ${escapeHtml(subject.name)}">
+              </label>
+            </div>
+            <p class="subject-summary" data-attendance-summary>${progress.attended} of ${progress.held} classes · ${attendancePercent}% attendance</p>
+            <h4>Syllabus progress</h4>
+            <div class="progress-label"><span>${completedTopics} of ${subject.syllabus.length} topics complete</span><strong>${syllabusPercent}%</strong></div>
+            <progress max="100" value="${syllabusPercent}" aria-label="${syllabusPercent}% of ${escapeHtml(subject.name)} syllabus completed"></progress>
+            <ul class="tracked-list">
+              ${subject.syllabus.map((item, itemIndex) => `
+                <li class="${progress.completedTopics.includes(itemIndex) ? 'is-complete' : ''}">
+                  <input type="checkbox" data-progress="topic" data-item-index="${itemIndex}" ${progress.completedTopics.includes(itemIndex) ? 'checked' : ''} aria-label="Mark ${escapeHtml(item)} complete">
+                  <span>${escapeHtml(item)}</span>
+                </li>
+              `).join('')}
+            </ul>
+            <h4>Assignments</h4>
+            <ul class="tracked-list">
+              ${subject.assignments.map((item, itemIndex) => `
+                <li class="${progress.completedAssignments.includes(itemIndex) ? 'is-complete' : ''}">
+                  <input type="checkbox" data-progress="assignment" data-item-index="${itemIndex}" ${progress.completedAssignments.includes(itemIndex) ? 'checked' : ''} aria-label="Mark assignment ${escapeHtml(item)} complete">
+                  <span>${escapeHtml(item)}</span>
+                </li>
+              `).join('')}
+            </ul>
+          </article>
+        `;
+      }).join('');
+      updateAcademicStats();
+    }
+
+    subjectGrid.addEventListener('change', event => {
+      const input = event.target;
+      const card = input.closest('[data-subject-index]');
+      if (!card || !input.dataset.progress) return;
+
+      const subject = subjects[Number(card.dataset.subjectIndex)];
+      const progress = getSubjectProgress(subject.name);
+      if (input.dataset.progress === 'attended' || input.dataset.progress === 'held') {
+        const attendedInput = card.querySelector('[data-progress="attended"]');
+        const heldInput = card.querySelector('[data-progress="held"]');
+        const held = Math.max(0, Number(heldInput.value));
+        const attended = Math.min(held, Math.max(0, Number(attendedInput.value)));
+        progress.attended = attended;
+        progress.held = held;
+        attendedInput.value = attended;
+        attendedInput.max = held;
+        card.querySelector('[data-attendance-summary]').textContent = `${attended} of ${held} classes · ${held ? Math.round((attended / held) * 100) : 0}% attendance`;
+        updateAcademicStats();
+      } else {
+        const targetKey = input.dataset.progress === 'topic' ? 'completedTopics' : 'completedAssignments';
+        const itemIndex = Number(input.dataset.itemIndex);
+        progress[targetKey] = input.checked
+          ? [...new Set([...progress[targetKey], itemIndex])]
+          : progress[targetKey].filter(index => index !== itemIndex);
+        renderSubjects();
+      }
+      saveProgress();
+    });
 
     let tasks = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [
       {
@@ -657,6 +1047,7 @@
     taskList.addEventListener('click', handleTaskActions);
     cancelEditBtn.addEventListener('click', resetForm);
 
+    renderSubjects();
     renderTasks();
   </script>
 </body>
