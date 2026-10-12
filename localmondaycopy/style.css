@@ -1,106 +1,92 @@
-* {
-    box-sizing: border-box;
+/* General styling */
+body {
     margin: 0;
     padding: 0;
-}
-
-body {
     font-family: Arial, sans-serif;
-    background: #f5f7fb;
-    color: #1f2937;
-    line-height: 1.6;
+    background-color: #f4f6f9;
 }
 
-.topbar {
-    background: #1d4ed8;
+p {
+    margin: 20px;
+    font-size: 18px;
+}
+
+/* Navigation menu */
+ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    background-color: #333333;
+}
+
+ul li {
+    float: left;
+}
+
+ul li a {
+    display: block;
     color: white;
-    padding: 16px 24px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-}
-
-.menu {
-    max-width: 1100px;
-    margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.brand {
-    font-size: 1.3rem;
-    font-weight: bold;
-}
-
-.menu ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-}
-
-.menu a {
-    color: white;
+    text-align: center;
+    padding: 14px 16px;
     text-decoration: none;
-    font-weight: 600;
 }
 
-.container {
-    max-width: 1100px;
+ul li a:hover {
+    background-color: #111111;
+}
+
+/* Table styling */
+table {
+    width: 80%;
     margin: 30px auto;
-    padding: 0 20px;
+    border-collapse: collapse;
+    background-color: white;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
-.hero,
-.card {
-    background: white;
-    border-radius: 12px;
-    padding: 24px;
-    margin-bottom: 20px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-}
-
-.hero h1,
-.card h2 {
-    margin-bottom: 12px;
-    color: #111827;
-}
-
-.inputs {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 16px;
-    margin: 20px 0;
-}
-
-label {
-    display: flex;
-    flex-direction: column;
-    font-weight: 600;
-    gap: 8px;
-}
-
-input,
-select,
-button {
-    padding: 10px 12px;
-    border-radius: 8px;
-    border: 1px solid #cbd5e1;
-    font-size: 1rem;
-}
-
-button {
-    background: #2563eb;
+/* Table header */
+th {
+    background-color: #007bff;
     color: white;
-    border: none;
-    cursor: pointer;
-    font-weight: 600;
+    padding: 14px;
+    text-align: center;
+    border: 1px solid #dddddd;
 }
 
-button:hover {
-    background: #1d4ed8;
+/* Table cells */
+td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #dddddd;
+    font-size: 15px;
 }
 
-.result {
-    margin-top: 16px;
+/* Alternate row colors */
+tbody tr:nth-child(even) {
+    background-color: #f2f6fc;
+}
+
+/* Hover effect */
+tbody tr:hover {
+    background-color: #dceeff;
+}
+
+/* Highlight output column */
+.output {
+    color: #198754;
     font-weight: bold;
-    color: #0f172a;
+}
+
+/* Responsive table */
+@media (max-width: 600px) {
+    table {
+        width: 96%;
+    }
+
+    th,
+    td {
+        padding: 8px 5px;
+        font-size: 12px;
+    }
 }
